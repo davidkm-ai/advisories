@@ -1,0 +1,10 @@
+Copyright (c) 2026 David Kutz-Marks
+
+These advisories are published for defensive purposes. You may reproduce and
+redistribute them in whole or in part, with attribution, for the purpose of
+securing affected systems.
+
+The vulnerability details, proof-of-concept material and analysis are provided
+as-is, without warranty of any kind. Nothing here is a statement about any
+system other than the author's own test instances. No third-party host was
+tested in the course of this research.
