@@ -10,7 +10,7 @@
 
 ## Summary
 
-Three bugs in Cacti ≤ 1.2.30 chain into **unauthenticated remote code execution** as the web
+Three bugs on the Cacti **`develop` branch (`1.3.0-dev`)** chain into **unauthenticated remote code execution** as the web
 server user. Each is individually CVE-worthy; together they take you from an anonymous HTTP
 GET to a PHP webshell with no credentials.
 
@@ -27,7 +27,7 @@ GET to a PHP webshell with no credentials.
                                  uid=33(www-data) — RCE
 ```
 
-Demonstrated end to end on a local Cacti 1.2.x container: 64 seconds from first request to
+Demonstrated end to end on a local Cacti **`develop` (`1.3.0-dev`, commit `c869d9b2`)** container: 64 seconds from first request to
 interactive reverse shell.
 
 ---
@@ -37,7 +37,7 @@ interactive reverse shell.
 | | |
 |---|---|
 | Product | Cacti (`github.com/Cacti/cacti`) |
-| Affected | `< 1.2.31` for links 1–2; the traversal sink exists on all branches |
+| Affected | **`develop` branch (`1.3.0-dev`) only** for links 1–2 (SQLi + sig-bypass); `1.2.x` stable and `main` are **NOT affected** (numeric-list filter + correct bool key check). The link-3 traversal sink exists on all branches but is post-auth (`PR:L`) on its own; the **pre-auth chain is develop-only**. |
 | Fixed | **1.2.31** |
 | Precondition for the pre-auth link | the **guest account** feature must be enabled (`guest_user` must name a real row) |
 
