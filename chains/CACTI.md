@@ -51,9 +51,6 @@ precondition and could not. The variable-variable escape only *unsets*, and `reg
 cannot exist on the PHP ≥ 8 that Cacti requires. **Without guest access the chain starts at
 link 2 and requires an authenticated admin holding realm 17 (Import Templates).**
 
-I am stating this because the exploit video says "pre-auth" and it is true only under that
-configuration. Say the quiet part.
-
 ---
 
 ## CVE-2026-39955 — pre-auth SQL injection in `graph_view.php`
@@ -187,9 +184,3 @@ Defence in depth, in priority order:
 | 2026-10-21 | This write-up published |
 
 **Credit:** David Kutz-Marks.
-
----
-
-*Each issue above was reproduced against a local Docker instance of the affected release.
-Where a demonstration video accompanies this write-up it is a presentation artifact; the
-proof-of-concept and its transcript are the evidence.*
