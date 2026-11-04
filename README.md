@@ -1,6 +1,6 @@
 # Security advisories — David Kutz-Marks
 
-Vulnerability research by **David Kutz-Marks** (dkmsecurity). Each CVE below has its own record in
+Vulnerability research by **David Kutz-Marks** (@davidkm-ai). Each CVE below has its own record in
 this repository. The narrative write-ups, with video, live at **https://dkmsecurity.net/research.html**.
 
 **Fourteen distinct vulnerabilities across three products.** Every one was reported to the vendor
@@ -20,7 +20,7 @@ Pre-authentication RCE chain plus one unauthenticated information disclosure. Fi
 | [CVE-2026-39939](CVE-2026-39939.md) | Package-import path traversal → arbitrary file write | 22, 434 | Reserved |
 | [CVE-2026-94826](CVE-2026-94826.md) | Unauthenticated REST API, 13 endpoints | 306 | Reserved — fixed on `develop`, in **no release** |
 
-⚠ **Cacti's shipped CHANGELOG claims 1.2.31 fixed the traversal. The fix commit `36fa99bda` is dated
+**Cacti's shipped CHANGELOG claims 1.2.31 fixed the traversal. The fix commit `36fa99bda` is dated
 61 days after 1.2.31 shipped.** If you read the changelog and concluded you were safe, check the commit.
 
 ## Appsmith Community Edition
@@ -52,7 +52,7 @@ Seven issues, two of which chain into pre-authentication RCE on PHP < 8.1. All f
 | [CVE-2026-94836](CVE-2026-94836.md) | SQLi in the tag bulk-action handler | 89 | Reserved |
 | [CVE-2026-94834](CVE-2026-94834.md) | Arbitrary file read, `download.php` | 22 | Reserved |
 
-⚠ **There is no tagged release carrying the fix** — the repository has published no releases and
+**There is no tagged release carrying the fix** — the repository has published no releases and
 no tags at all, and `version.txt` reads `3.42` at the fix commit's parent, at the fix, and today.
 **No version string distinguishes a patched install from an unpatched one.** If you deployed before
 2026-04-18, update to `main` at `658d46c8` or later and verify by inspecting the sinks, not the version.

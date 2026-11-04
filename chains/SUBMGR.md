@@ -1,11 +1,11 @@
 # SubMgr ≤ 3.42 — pre-authentication RCE chain + 5 further issues (CVE-2026-94832 … CVE-2026-94838)
 
-**Researcher:** David Kutz-Marks (dkmsecurity)
+**Researcher:** David Kutz-Marks (@davidkm-ai)
 **Vendor:** Devin Emke — `github.com/devinemke/submgr`
 **Reported:** 2026-03-28
-**Fixed:** commit **`658d46c8`** (2026-04-18) on `main` — *"various security fixes (thanks @dkmsecurity)"*
+**Fixed:** commit **`658d46c8`** (2026-04-18) on `main` — *"various security fixes (thanks [@davidkm-ai])"*
 **Status:** all seven remediated at the sinks (source-verified 2026-06-06).
-⚠️ **No tagged release carries the fix.** See *Remediation*.
+**No tagged release carries the fix.** See *Remediation*.
 
 ---
 
@@ -83,7 +83,7 @@ at `inc_login.php:1302` when *Maintenance > Backup* runs.
 ## The other five
 
 ### CVE-2026-94833 — `popup.php`: `extract($_REQUEST)` → unconstrained SQL injection
-**CWE-89 / CWE-621 · CVSS 3.1 8.8**
+**CWE-89 / CWE-621 · CVSS 3.1 7.5 unconditional / 9.8 with MySQL `FILE`**
 
 Line 9 is `extract($_REQUEST)`, which overwrites every local and global variable with
 attacker-supplied values. Line 17 then builds:
@@ -96,8 +96,12 @@ Four of the five components are now attacker-controlled, with **no character res
 full query control** — and the result is rendered back on the page, so it is a direct read, not
 a blind one. If the MySQL user holds `FILE`, `INTO OUTFILE` writes a webshell to the webroot.
 
-Authorization is `$_SESSION['contact']['access']` being *truthy*, which includes **reader** —
-the lowest staff role.
+Authorization is `$_SESSION['contact']['access']` being *truthy* — and the
+`extract($_REQUEST)` at `popup.php:9` runs six lines **before** that check, at global scope, so
+the request overwrites the `$_SESSION` superglobal itself: `&_SESSION[contact][access]=zzzz`
+satisfies the `popup.php:15` gate with **no cookie and no account**, and the forged value need
+not be a real role. **This is unauthenticated.** Controls: parameter absent → no output;
+parameter empty → no output; a real logged-in submitter without the forge → no output.
 
 The `extract()` also overwrites `$config`, `$nonce` and friends. Lower impact, but it is the
 same defect.
@@ -146,7 +150,9 @@ path does not check anything. `main_login.php:1319` calls `upload()` and then te
 upload errors and size. The original extension is preserved when the file is permanently renamed
 to `action_<id>.<ext>` at `main_login.php:694`, and `action_id` is **sequential**.
 
-So: any staff user — reader included — attaches `shell.php` to a submission and fetches
+So: any staff account — `admin` and `editor` unconditionally, and an `active 1`–`active 5`
+account whenever its group digit appears in the chosen action type's `access_groups`
+(`main_login.php:1334`) — attaches `shell.php` to a submission and fetches
 `action_<n>.php`. Permanent file, guessable name, no validation.
 
 ---
@@ -155,7 +161,7 @@ So: any staff user — reader included — attaches `shell.php` to a submission 
 
 **Update to `main` at commit `658d46c8` (2026-04-18) or later.**
 
-⚠️ **There is no tagged release containing these fixes.** The in-tree version string reads
+**There is no tagged release containing these fixes.** The in-tree version string reads
 `3.42` both before and after the fix commit. If you installed from a tag, a release archive or
 a vendor bundle, **you are almost certainly still vulnerable even though you believe you are on
 the latest version.** Check the commit, not the version string.
@@ -194,7 +200,7 @@ Operator hardening regardless of version:
 | Date | Event |
 |---|---|
 | 2026-03-28 | Seven issues reported to the vendor |
-| 2026-04-18 | Vendor ships `658d46c8` fixing all seven, crediting `@dkmsecurity` |
+| 2026-04-18 | Vendor ships `658d46c8` fixing all seven, crediting [`@davidkm-ai`] |
 | 2026-06-06 | Fixes independently verified at every sink |
 | 2026-10-03 | MITRE assigns CVE-2026-94832 … CVE-2026-94838 |
 | 2026-10-21 | This write-up published |

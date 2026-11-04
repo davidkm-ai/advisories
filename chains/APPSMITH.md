@@ -1,6 +1,6 @@
 # Appsmith Community Edition ≤ 1.99 — unauthenticated-signup to super-admin takeover (CVE-2026-94829 / 94830 / 94831)
 
-**Researcher:** David Kutz-Marks (dkmsecurity)
+**Researcher:** David Kutz-Marks (@davidkm-ai)
 **Vendor:** Appsmith, Inc. — `github.com/appsmithorg/appsmith`
 **Reported:** 2026-04-11 to `security@appsmith.com`; refiled as GitHub Security Advisories
 **Fixed:** v2.0 (mitigation) → **v2.2** (explicit fix, commit `48ac053d5e`) → v2.3 (hardening)
@@ -101,7 +101,7 @@ for CVE-2026-94831.
 Separately: the REST-API SSRF filter that *does* exist never blocked RFC 1918 ranges — only
 cloud-metadata IPs and Docker-mode localhost.
 
-### ⚠️ What the fix did and did not do — read before quoting this
+### What the fix did and did not do — read before quoting this
 
 v2.3 (PR #41985) applies `RestrictedHostFilter` on the datasource **connection** path, and the
 Redis plugin now calls `RestrictedHostFilter.isHostBlocked(host)` and routes through a

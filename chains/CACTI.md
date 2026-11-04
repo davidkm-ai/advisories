@@ -1,6 +1,6 @@
 # Cacti — pre-authentication RCE chain (CVE-2026-39955 → CVE-2026-40941 → CVE-2026-39939)
 
-**Researcher:** David Kutz-Marks (`@davidkm-ai` / dkmsecurity)
+**Researcher:** David Kutz-Marks (`@davidkm-ai`)
 **Reported:** 2026-03-25 (GitHub Security Advisories on `Cacti/cacti`)
 **Fixed:** Cacti **1.2.31** (a 33-fix security release)
 **Published CVEs:** 2026-06-24 / 2026-06-25
@@ -111,7 +111,7 @@ if (str_contains($filename, 'scripts/')) { /* treat as a script, write it */ }
 `realpath()` containment check and no `../` rejection, and the attacker-controlled file content
 goes straight to `fwrite()` at the resolved path — which is the webroot.
 
-### ⚠️ Correction to the vendor's own changelog
+### Correction to the vendor's own changelog
 
 Cacti's shipped CHANGELOG lists this as fixed in **1.2.31**. The commit that actually contains
 the fix, `36fa99bda`, is dated **61 days after 1.2.31 shipped**, and its inline comment

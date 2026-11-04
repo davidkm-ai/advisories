@@ -11,7 +11,7 @@
 | **Fixed** | <version or commit> |
 | **CWE** | CWE-NNN |
 | **CVSS 3.1** | 0.0 (`AV:?/AC:?/PR:?/UI:?/S:?/C:?/I:?/A:?`) — *researcher-assigned* |
-| **Discoverer** | David Kutz-Marks (dkmsecurity) |
+| **Discoverer** | David Kutz-Marks (@davidkm-ai) |
 | **Full chain write-up** | [`chains/CHAIN.md`](chains/CHAIN.md) |
 
 ## Detail
