@@ -35,7 +35,7 @@ file-upload holes — one of which is reachable **unauthenticated**.
 | Product | SubMgr (Submission Manager), Devin Emke |
 | Affected | **all versions through 3.42** |
 | Fixed | commit `658d46c8` on `main`, 2026-04-18 |
-| Chain precondition | **PHP < 8.1** for link 1 (~20–30% of live installs sampled; PHP 7.3 and 7.4 confirmed on university-hosted instances) |
+| Chain precondition | **PHP < 8.1** for link 1 |
 
 ---
 
