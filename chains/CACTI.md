@@ -41,7 +41,7 @@ interactive reverse shell.
 | Fixed | **1.2.31** |
 | Precondition for the pre-auth link | the **guest account** feature must be enabled (`guest_user` must name a real row) |
 
-### On the guest precondition — stated plainly
+### On the guest precondition
 
 Link 1 is only reachable without credentials when Cacti's guest-account feature is turned on.
 `include/auth.php:133-150` holds the only pre-auth `return true`, and it fires only when a page

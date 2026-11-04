@@ -61,10 +61,7 @@ no tags at all, and `version.txt` reads `3.42` at the fix commit's parent, at th
 
 ## Notes on these records
 
-- **CVSS vectors are the researcher's own assessment** and may differ from the vendor's or NVD's.
 - **Reserved** means MITRE has assigned the ID but the record is not yet populated. Those appear here
   first; the CVE records follow.
-- Nothing in this repository is a statement about any system other than the researcher's own test
-  instances. No third-party host was tested.
 
 **Contact:** davidkm@dkmsecurity.net · **Site:** https://dkmsecurity.net
