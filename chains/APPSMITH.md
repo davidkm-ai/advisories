@@ -101,7 +101,7 @@ for CVE-2026-94831.
 Separately: the REST-API SSRF filter that *does* exist never blocked RFC 1918 ranges — only
 cloud-metadata IPs and Docker-mode localhost.
 
-### What the fix did and did not do — read before quoting this
+### What the fix did and did not do
 
 v2.3 (PR #41985) applies `RestrictedHostFilter` on the datasource **connection** path, and the
 Redis plugin now calls `RestrictedHostFilter.isHostBlocked(host)` and routes through a
@@ -189,11 +189,5 @@ directly, which is the vendor's own acknowledgement of the report.
 | 2026-07-07 | Vendor commits the explicit fix, citing GHSA-qhfj-g87x-m39w |
 | 2026-10-03 | MITRE assigns CVE-2026-94829 / 94830 / 94831 |
 | 2026-10-21 | This write-up published |
-
-**Outstanding with the vendor:** GHSA-qhfj-g87x-m39w was published on 2026-08-12, and
-GHSA-rf99-rc2w-vh94 on 2026-09-29, but neither has a CVE identifier attached. Until one is
-attached the advisories do not reach the global GitHub advisory database or OSV, so self-hosted
-operators are not notified through Dependabot. Attaching the identifiers already assigned for
-these issues would close that gap.
 
 **Credit:** David Kutz-Marks.
