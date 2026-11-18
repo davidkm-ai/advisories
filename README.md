@@ -39,8 +39,9 @@ Redis (GHSA-qhfj-g87x-m39w)"* — it names the advisory.
 
 ## SubMgr (Submission Manager)
 
-Seven issues, two of which chain into pre-authentication RCE on PHP < 8.1. All fixed in commit
-**`658d46c8`** (2026-04-18). Full write-up: [`chains/SUBMGR.md`](chains/SUBMGR.md).
+Seven issues, two of which chain into pre-authentication RCE on PHP < 8.1. Five fixed in commit
+**`658d46c8`** (2026-04-18); CVE-2026-94837 and CVE-2026-94838 in commit **`213e949`** (2026-04-24).
+Full write-up: [`chains/SUBMGR.md`](chains/SUBMGR.md).
 
 | CVE | Vulnerability | CWE | Status |
 |---|---|---|---|
@@ -55,7 +56,7 @@ Seven issues, two of which chain into pre-authentication RCE on PHP < 8.1. All f
 **There is no tagged release carrying the fix** — the repository has published no releases and
 no tags at all, and `version.txt` reads `3.42` at the fix commit's parent, at the fix, and today.
 **No version string distinguishes a patched install from an unpatched one.** If you deployed before
-2026-04-18, update to `main` at `658d46c8` or later and verify by inspecting the sinks, not the version.
+2026-04-24, update to `main` at `213e949` or later and verify by inspecting the sinks, not the version.
 
 ---
 

@@ -74,7 +74,7 @@ You are now the super-admin. No credential was cracked, no token was forged, no 
 needed.
 
 ## CVE-2026-94830 — every database plugin bypasses the SSRF filter
-**CWE-918 · CVSS 3.1 6.5 (AV:N/AC:L/PR:L/UI:N/S:C/C:H/I:N/A:N)**
+**CWE-918 · CVSS 3.1 7.2 (AV:N/AC:L/PR:L/UI:N/S:C/C:H/I:N/A:N)**
 
 Appsmith's SSRF protection lives in `WebClientUtils.java` and applies to **Spring WebClient
 HTTP requests**. The database plugins do not make HTTP requests:

@@ -3,7 +3,8 @@
 **Researcher:** David Kutz-Marks (@davidkm-ai)
 **Vendor:** Devin Emke — `github.com/devinemke/submgr`
 **Reported:** 2026-03-28
-**Fixed:** commit **`658d46c8`** (2026-04-18) on `main` — *"various security fixes (thanks [@davidkm-ai])"*
+**Fixed:** five issues in commit **`658d46c8`** (2026-04-18) on `main` — *"various security fixes (thanks [@davidkm-ai])"* — and
+CVE-2026-94837 / CVE-2026-94838 in commit **`213e949`** (2026-04-24) — *"improved file type validation"*
 **Status:** all seven remediated at the sinks (source-verified 2026-06-06).
 **No tagged release carries the fix.** See *Remediation*.
 
@@ -34,7 +35,7 @@ file-upload holes — one of which is reachable **unauthenticated**.
 |---|---|
 | Product | SubMgr (Submission Manager), Devin Emke |
 | Affected | **all versions through 3.42** |
-| Fixed | commit `658d46c8` on `main`, 2026-04-18 |
+| Fixed | commit `658d46c8` on `main`, 2026-04-18 (five issues); commit `213e949`, 2026-04-24 (CVE-2026-94837, CVE-2026-94838) |
 | Chain precondition | **PHP < 8.1** for link 1 |
 
 ---
@@ -46,7 +47,7 @@ file-upload holes — one of which is reachable **unauthenticated**.
 
 Three facts have to line up, and on PHP 7.x they do:
 
-1. `email_check()` at `inc_common.php:1544` validates with a regex that **explicitly permits
+1. `email_check()` (`inc_common.php:1544`) validates with a regex at `inc_common.php:1546` that **explicitly permits
    single quotes in the local part** — legal per RFC 5321, fatal here.
 2. The value is passed through `htmlspecialchars()`. **Before PHP 8.1 the default flag set was
    `ENT_COMPAT`, which does not encode `'`.** PHP 8.1 changed the default to
@@ -60,7 +61,7 @@ the full 60-character bcrypt admin hash takes roughly **2000 HTTP requests** aga
 submission form, with no account.
 
 ### CVE-2026-94835 — OS command injection in the database backup function
-**CWE-78 · CVSS 3.1 7.2 (AV:N/AC:L/PR:H/UI:N/S:C/C:H/I:H/A:H)**
+**CWE-78 · CVSS 3.1 8.4 (AV:N/AC:L/PR:H/UI:N/S:C/C:H/I:H/A:H)**
 
 An admin sets `mysqldump_path` under *Configuration > General*. On save it passes through
 `strip_tags()` and `stripslashes()` — neither of which touches a shell metacharacter. At run
@@ -107,7 +108,7 @@ The `extract()` also overwrites `$config`, `$nonce` and friends. Lower impact, b
 same defect.
 
 ### CVE-2026-94836 — SQL injection in the tag bulk-action handler
-**CWE-89 · CVSS 3.1 6.5**
+**CWE-89 · CVSS 3.1 5.5 (AV:N/AC:L/PR:H/UI:N/S:U/C:H/I:L/A:N)**
 
 `inc_login.php:572` `implode()`s `$_POST['tag'][]` directly into an `IN()` clause with no
 escaping:
@@ -128,9 +129,9 @@ the upload directory: `file=../../config_db.php` yields the database credentials
 `file=../../../etc/passwd` the system file.
 
 ### CVE-2026-94837 — TOCTOU in file upload: written before validated
-**CWE-434 / CWE-367 · CVSS 3.1 7.5**
+**CWE-434 / CWE-367 · CVSS 3.1 8.1 (AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:H)**
 
-`upload()` at `inc_common.php:1708` **moves the file into the upload directory first** and
+`upload()` (`inc_common.php:1708`) **moves the file into the upload directory** at `inc_common.php:1726` **first** and
 `form_check()` validates the extension **second**. When validation fails, `exit_error()` fires —
 and the file is still on disk. It is only cleaned up if the *same session* uploads again.
 
@@ -148,7 +149,7 @@ enforce it**.
 Submission uploads at least check an allowlist (the `file_types` table). The *action attachment*
 path does not check anything. `main_login.php:1319` calls `upload()` and then tests only for
 upload errors and size. The original extension is preserved when the file is permanently renamed
-to `action_<id>.<ext>` at `main_login.php:694`, and `action_id` is **sequential**.
+to `action_<id>.<ext>` at `inc_login.php:694` (renamed at `inc_login.php:696`), and `action_id` is **sequential**.
 
 So: any staff account — `admin` and `editor` unconditionally, and an `active 1`–`active 5`
 account whenever its group digit appears in the chosen action type's `access_groups`
@@ -159,7 +160,8 @@ account whenever its group digit appears in the chosen action type's `access_gro
 
 ## Remediation
 
-**Update to `main` at commit `658d46c8` (2026-04-18) or later.**
+**Update to `main` at commit `213e949` (2026-04-24) or later.** Five of the seven were fixed in
+`658d46c8` (2026-04-18); CVE-2026-94837 and CVE-2026-94838 were fixed six days later in `213e949`.
 
 **There is no tagged release containing these fixes.** The in-tree version string reads
 `3.42` both before and after the fix commit. If you installed from a tag, a release archive or
@@ -170,13 +172,13 @@ Fixes as landed:
 
 | CVE | File:line on `main` | Fix |
 |---|---|---|
-| 94832 | `inc_common.php:1600` | `real_escape` at the email SQL sink |
+| 94832 | `inc_common.php:1665` | `real_escape` at the email SQL sink |
 | 94833 | `popup.php:17-29` | `extract()` removed; parameter allowlist; `(int)`; `real_escape` |
 | 94834 | `download.php:34-36` | `basename` + `realpath` + `(int)` |
 | 94835 | `inc_login.php:1302` | `escapeshellcmd` |
 | 94836 | `inc_login.php:572` | `(int)` + `real_escape` on `tag[]` |
-| 94837 | `inc_common.php:1567` | temp file unlinked on invalid extension |
-| 94838 | `main_login.php:1349-1354` | extension allowlist + MIME check + temp delete |
+| 94837 | `inc_common.php:1581` (`213e949`) | temp file unlinked on invalid extension or size |
+| 94838 | `main_login.php:1353` + `inc_common.php:1578-1579` (`213e949`) | extension allowlist + MIME check + temp delete |
 
 Operator hardening regardless of version:
 
@@ -200,7 +202,8 @@ Operator hardening regardless of version:
 | Date | Event |
 |---|---|
 | 2026-03-28 | Seven issues reported to the vendor |
-| 2026-04-18 | Vendor ships `658d46c8` fixing all seven, crediting [`@davidkm-ai`] |
+| 2026-04-18 | Vendor ships `658d46c8`, fixing five of the seven and crediting [`@davidkm-ai`] |
+| 2026-04-24 | Vendor ships `213e949`, fixing the two upload issues (94837, 94838) |
 | 2026-06-06 | Fixes independently verified at every sink |
 | 2026-10-03 | MITRE assigns CVE-2026-94832 … CVE-2026-94838 |
 | 2026-10-21 | This write-up published |
@@ -208,6 +211,6 @@ Operator hardening regardless of version:
 **Note for operators:** all seven issues were fixed on the `main` branch, but no tagged
 release carries the fixes and the in-tree version string is unchanged at 3.42 both before and
 after the fix commit. Installations deployed from a tag or a source archive therefore remain
-affected. Deploy from `main` at or after `658d46c8`, or apply the commit directly.
+affected. Deploy from `main` at or after `213e949` (2026-04-24), or apply both commits directly.
 
 **Credit:** David Kutz-Marks.
